@@ -1,33 +1,134 @@
-.welcome-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  text-align: center;
+/* -----------------------------------------------------------------------
+   Fonts: Fraunces (serif, display) carries the "trust / warmth"
+   personality; Inter (grotesk, body/UI) stays quiet and legible for
+   everything else. Both are now loaded via <link> tags in index.html
+   (parallel fetch, no @import needed here).
+   ----------------------------------------------------------------------- */
+
+/* -----------------------------------------------------------------------
+   Design tokens
+   Scoped to :host so they never leak into the rest of the app, and so the
+   real logo / brand colors can be swapped later by editing only this block.
+   ----------------------------------------------------------------------- */
+:host {
+  --ink: #0f1b2a;          /* primary background, headlines on light */
+  --ink-soft: #17293e;     /* secondary dark surface (cards on dark bg) */
+  --paper: #f7f4ee;        /* base light background */
+  --paper-dim: #efe9dd;    /* subtle section separation on light */
+  --clay: #c9622a;         /* primary accent — warmth, CTA */
+  --clay-dark: #a94f21;    /* hover state for clay */
+  --verified: #2f9e6e;     /* trust-score / "verified" green */
+  --slate: #3d4451;        /* body text on light backgrounds */
+  --slate-soft: #6b7280;   /* secondary text */
+  --line: rgba(15, 27, 42, 0.1);
+
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  display: block;
+  font-family: var(--font-body);
+  color: var(--slate);
+  background: var(--paper);
 }
 
-.hero-section {
-  max-width: 700px;
+/* -----------------------------------------------------------------------
+   Utility hooks referenced from the template.
+   Kept to the handful of effects Tailwind's core utilities can't express
+   cleanly: a textured dark surface, the trust-badge glow, the one
+   orchestrated hero entrance, and the chat-mockup caret.
+   ----------------------------------------------------------------------- */
+
+.font-display {
+  font-family: var(--font-display);
 }
 
-.hero-section h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+/* Faint paper grain on the dark hero surface so it reads as a material,
+   not a flat gradient. Pure CSS, no image request. */
+.surface-ink {
+  background-color: var(--ink);
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(201, 98, 42, 0.16), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgba(47, 158, 110, 0.12), transparent 40%);
 }
 
-.hero-section p {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+.text-clay { color: var(--clay); }
+.bg-clay { background-color: var(--clay); }
+.bg-clay:hover { background-color: var(--clay-dark); }
+.bg-verified { background-color: var(--verified); }
+.text-verified { color: var(--verified); }
+.bg-ink { background-color: var(--ink); }
+.bg-ink-soft { background-color: var(--ink-soft); }
+.border-line { border-color: var(--line); }
+
+/* Trust-score badge: a small ring + number, the single visual motif that
+   repeats across the page (hero mockup, feature card, AI section). */
+.score-ring {
+  --pct: 92;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(closest-side, var(--ink) 66%, transparent 67% 100%),
+    conic-gradient(var(--verified) calc(var(--pct) * 1%), rgba(255,255,255,0.15) 0);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.95rem;
 }
 
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+/* Chat-mockup caret for the AI assistant transcript */
+.chat-bubble {
+  position: relative;
+}
+.chat-bubble.from-user::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  bottom: 10px;
+  width: 12px;
+  height: 12px;
+  background: inherit;
+  clip-path: polygon(0 0, 0% 100%, 100% 100%);
+}
+.chat-bubble.from-ai::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  bottom: 10px;
+  width: 12px;
+  height: 12px;
+  background: inherit;
+  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
 }
 
-.actions button {
-  padding: 0.75rem 1.5rem;
-  cursor: pointer;
+/* -----------------------------------------------------------------------
+   The one orchestrated motion moment on the page: the hero content settles
+   into place on load. Everything else (hover states) is instant or a
+   short opacity/transform transition — no scroll-triggered reveals on
+   every section, per design guidance.
+   ----------------------------------------------------------------------- */
+@keyframes settle-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-in {
+  animation: settle-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-in-delay-1 { animation-delay: 0.08s; }
+.hero-in-delay-2 { animation-delay: 0.16s; }
+.hero-in-delay-3 { animation-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-in, .hero-in-delay-1, .hero-in-delay-2, .hero-in-delay-3 {
+    animation: none;
+  }
+}
+
+/* Visible keyboard focus ring, consistent with the clay accent */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

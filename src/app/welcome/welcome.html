@@ -1,14 +1,332 @@
-<main class="welcome-page">
-  <section class="hero-section">
-    <h1>Bienvenue sur FINDOOR AI</h1>
+<!--
+  FINDOOR AI — Welcome / landing page.
+  Scope reminder: presentational only. Every routerLink below points to
+  /login or /register, which already exist in app.routes.ts — nothing
+  here touches routing, auth, or real listing data.
+-->
 
-    <p>
-      L'intelligence artificielle qui ouvre la porte de votre futur logement.
-    </p>
+<!-- ============================== NAVBAR ============================== -->
+<header class="sticky top-0 z-50 border-b border-line bg-[color:var(--paper)]/90 backdrop-blur">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <!-- Logo placeholder: swap this whole <a> block for an <img> once the
+         real logo exists — nothing else in the page references it. -->
+    <a routerLink="/" class="flex items-center gap-2.5">
+      <span class="grid h-9 w-9 place-items-center rounded-lg bg-ink font-display text-lg font-semibold text-clay">
+        F
+      </span>
+      <span class="font-display text-lg font-medium text-[color:var(--ink)]">
+        FINDOOR <span class="text-clay">AI</span>
+      </span>
+    </a>
 
-    <div class="actions">
-      <button>Se connecter</button>
-      <button>Créer un compte</button>
+    <!-- Section links: hidden on small screens to keep the mobile bar to
+         just the brand + the two account actions. -->
+    <div class="hidden items-center gap-8 text-sm text-slate-soft md:flex">
+      <a href="#apropos" class="hover:text-[color:var(--ink)]">Le projet</a>
+      <a href="#fonctionnalites" class="hover:text-[color:var(--ink)]">Fonctionnalités</a>
+      <a href="#assistant-ia" class="hover:text-[color:var(--ink)]">Assistant IA</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a
+        routerLink="/login"
+        class="rounded-md px-4 py-2 text-sm font-medium text-[color:var(--ink)] transition hover:bg-[color:var(--paper-dim)]"
+      >
+        Se connecter
+      </a>
+      <a
+        routerLink="/register"
+        class="bg-clay rounded-md px-4 py-2 text-sm font-medium text-white transition"
+      >
+        Créer un compte
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <!-- ============================== HERO ============================== -->
+  <section class="surface-ink relative overflow-hidden text-white">
+    <div class="mx-auto grid max-w-6xl gap-16 px-6 py-20 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:py-28">
+      <!-- Left: message + CTAs -->
+      <div>
+        <h1 class="hero-in font-display text-4xl font-medium leading-[1.1] sm:text-5xl lg:text-[3.4rem]">
+          Louer ou vendre au Cameroun,
+          <span class="text-clay">sans jouer à la loterie.</span>
+        </h1>
+
+        <p class="hero-in hero-in-delay-1 mt-6 max-w-lg text-lg leading-relaxed text-white/75">
+          FINDOOR AI calcule un score de confiance sur chaque annonce et laisse
+          un assistant intelligent comprendre votre recherche en langage
+          naturel — plus besoin de deviner qui est sérieux.
+        </p>
+
+        <div class="hero-in hero-in-delay-2 mt-9 flex flex-wrap items-center gap-4">
+          <a
+            routerLink="/register"
+            class="bg-clay rounded-md px-6 py-3 text-sm font-semibold text-white transition hover:brightness-110"
+          >
+            Créer un compte gratuit
+          </a>
+          <a
+            routerLink="/login"
+            class="rounded-md border border-white/25 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+          >
+            J'ai déjà un compte
+          </a>
+        </div>
+
+        <p class="hero-in hero-in-delay-3 mt-6 text-sm text-white/50">
+          Pour les locataires comme pour les propriétaires — le rôle se choisit à l'inscription.
+        </p>
+      </div>
+
+      <!-- Right: hero visual — a mocked listing card + a floating AI
+           exchange, built entirely in HTML/CSS (no stock imagery),
+           illustrating the trust score and the assistant together. -->
+      <div class="hero-in hero-in-delay-2 relative mx-auto w-full max-w-sm">
+        <article class="bg-ink-soft rounded-2xl border border-white/10 p-5 shadow-2xl">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-display text-lg">Studio meublé — Bastos</p>
+              <p class="text-sm text-white/55">150 000 FCFA / mois</p>
+            </div>
+            <div class="score-ring" aria-label="Score de confiance : 92 sur 100">92</div>
+          </div>
+          <div class="mt-4 flex gap-2 text-xs text-white/60">
+            <span class="rounded-full bg-white/10 px-2.5 py-1">Photos vérifiées</span>
+            <span class="rounded-full bg-white/10 px-2.5 py-1">Téléphone confirmé</span>
+          </div>
+          <button
+            type="button"
+            class="bg-clay mt-5 w-full rounded-md py-2 text-sm font-medium text-white"
+          >
+            Contacter le propriétaire
+          </button>
+        </article>
+
+        <!-- Floating assistant exchange -->
+        <div class="mt-4 space-y-2">
+          <p class="chat-bubble from-user ml-auto max-w-[85%] rounded-xl rounded-br-sm bg-white/15 px-4 py-2 text-sm">
+            Un 2 pièces à Bastos, budget 150 000 FCFA
+          </p>
+          <p class="chat-bubble from-ai text-verified max-w-[85%] rounded-xl rounded-bl-sm bg-white/10 px-4 py-2 text-sm">
+            3 annonces vérifiées trouvées à Bastos
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROBLÈME / SOLUTION ===================== -->
+  <section id="apropos" class="scroll-mt-24 bg-[color:var(--paper)]">
+    <div class="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-2 md:gap-16">
+      <div>
+        <h2 class="font-display text-2xl font-medium text-[color:var(--ink)]">
+          Chercher un logement ne devrait pas être un pari.
+        </h2>
+        <p class="mt-4 leading-relaxed text-slate-soft">
+          Fausses annonces, arnaques aux cautions, quartiers mal connus,
+          journées perdues à visiter des biens qui n'existent plus : c'est le
+          quotidien de la recherche de logement au Cameroun, pour les
+          locataires comme pour les propriétaires sérieux qui se retrouvent
+          noyés au milieu des faux profils.
+        </p>
+      </div>
+      <div class="border-line md:border-l md:pl-16">
+        <h2 class="font-display text-2xl font-medium text-[color:var(--ink)]">
+          FINDOOR AI vérifie, avant que vous ne visitiez.
+        </h2>
+        <p class="mt-4 leading-relaxed text-slate-soft">
+          Chaque annonce reçoit un score de confiance calculé automatiquement
+          (photos, description, prix cohérent, téléphone vérifié). Vous
+          décrivez ce que vous cherchez à un assistant qui parle votre
+          langue, et vous échangez directement avec le propriétaire — tout
+          au même endroit.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FONCTIONNALITÉS ===================== -->
+  <section id="fonctionnalites" class="scroll-mt-24 bg-[color:var(--paper-dim)]">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <h2 class="font-display max-w-md text-2xl font-medium text-[color:var(--ink)]">
+        Tout ce qu'il faut pour louer, vendre ou trouver — rien de plus.
+      </h2>
+
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Each card: one real feature from the cahier des charges, one
+             small line icon. Icons are hand-drawn inline SVGs so nothing
+             depends on an icon library or external request. -->
+
+        <article class="rounded-xl border border-line bg-[color:var(--paper)] p-6">
+          <svg class="h-6 w-6 text-clay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="10.5" cy="10.5" r="6" />
+            <path d="M20 20l-4.8-4.8" stroke-linecap="round" />
+          </svg>
+          <h3 class="mt-4 font-medium text-[color:var(--ink)]">Recherche filtrée</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-soft">
+            Prix, quartier, type de bien — les filtres classiques, pour ceux
+            qui savent déjà ce qu'ils cherchent.
+          </p>
+        </article>
+
+        <article class="rounded-xl border border-line bg-[color:var(--paper)] p-6">
+          <svg class="h-6 w-6 text-clay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M4 5h16v11H9l-5 4V5z" stroke-linejoin="round" />
+          </svg>
+          <h3 class="mt-4 font-medium text-[color:var(--ink)]">Assistant IA</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-soft">
+            Décrivez votre recherche en langage naturel ; l'assistant la
+            traduit en critères et propose des annonces.
+          </p>
+        </article>
+
+        <article class="rounded-xl border border-line bg-[color:var(--paper)] p-6">
+          <svg class="h-6 w-6 text-clay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-3z" stroke-linejoin="round" />
+          </svg>
+          <h3 class="mt-4 font-medium text-[color:var(--ink)]">Score de confiance</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-soft">
+            Calculé automatiquement sur chaque annonce à partir des photos,
+            de la description, du prix et du téléphone vérifié.
+          </p>
+        </article>
+
+        <article class="rounded-xl border border-line bg-[color:var(--paper)] p-6">
+          <svg class="h-6 w-6 text-clay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M4 5h16v11H9l-5 4V5z" stroke-linejoin="round" />
+            <path d="M8 9h8M8 12h5" stroke-linecap="round" />
+          </svg>
+          <h3 class="mt-4 font-medium text-[color:var(--ink)]">Messagerie directe</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-soft">
+            Locataires et propriétaires échangent directement dans
+            l'application, sans passer par un numéro tiers.
+          </p>
+        </article>
+
+        <article class="rounded-xl border border-line bg-[color:var(--paper)] p-6">
+          <svg class="h-6 w-6 text-clay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M6 3h12v18l-6-4-6 4V3z" stroke-linejoin="round" />
+          </svg>
+          <h3 class="mt-4 font-medium text-[color:var(--ink)]">Favoris</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-soft">
+            Sauvegardez les annonces qui vous intéressent et retrouvez-les
+            en un instant.
+          </p>
+        </article>
+
+        <article class="rounded-xl border border-line bg-[color:var(--paper)] p-6">
+          <svg class="h-6 w-6 text-clay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 16V4M7 9l5-5 5 5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3" stroke-linecap="round" />
+          </svg>
+          <h3 class="mt-4 font-medium text-[color:var(--ink)]">Publication d'annonces</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-soft">
+            Les propriétaires publient et gèrent leurs biens, avec suivi du
+            statut de chaque annonce.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ASSISTANT IA (spotlight) ===================== -->
+  <section id="assistant-ia" class="surface-ink scroll-mt-24 text-white">
+    <div class="mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-2 lg:items-center">
+      <div>
+        <h2 class="font-display text-3xl font-medium leading-tight">
+          Pas de formulaire à remplir.
+          <span class="text-clay">Juste une phrase.</span>
+        </h2>
+        <p class="mt-5 max-w-md leading-relaxed text-white/70">
+          L'assistant de FINDOOR AI comprend une description en langage
+          courant — budget, quartier, type de bien — et la transforme en
+          critères de recherche pour ne remonter que des annonces
+          pertinentes et vérifiées.
+        </p>
+      </div>
+
+      <!-- Chat transcript mockup: static markup, no live model call here —
+           the real assistant is out of scope for this landing page. -->
+      <div class="bg-ink-soft space-y-3 rounded-2xl border border-white/10 p-6">
+        <p class="chat-bubble from-user ml-auto max-w-[80%] rounded-xl rounded-br-sm bg-white/15 px-4 py-2.5 text-sm">
+          Je cherche un appart 2 chambres, calme, budget max 200 000 FCFA
+        </p>
+        <p class="chat-bubble from-ai max-w-[80%] rounded-xl rounded-bl-sm bg-white/10 px-4 py-2.5 text-sm">
+          J'ai trouvé 5 annonces à Bastos et Omnisport dans ce budget.
+          Je vous montre les mieux notées ?
+        </p>
+        <p class="chat-bubble from-user ml-auto max-w-[80%] rounded-xl rounded-br-sm bg-white/15 px-4 py-2.5 text-sm">
+          Oui, celles avec un score au-dessus de 80
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA FINAL ===================== -->
+  <section class="bg-[color:var(--paper)]">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <div class="grid gap-6 rounded-2xl border border-line bg-[color:var(--paper-dim)] p-10 md:grid-cols-2 md:p-14">
+        <div>
+          <h3 class="font-display text-xl font-medium text-[color:var(--ink)]">
+            Vous cherchez un logement ?
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-soft">
+            Créez un compte locataire et laissez l'assistant IA faire le tri.
+          </p>
+          <a
+            routerLink="/register"
+            class="bg-clay mt-5 inline-block rounded-md px-5 py-2.5 text-sm font-semibold text-white"
+          >
+            Créer un compte gratuit
+          </a>
+        </div>
+        <div class="md:border-l md:border-line md:pl-14">
+          <h3 class="font-display text-xl font-medium text-[color:var(--ink)]">
+            Vous êtes propriétaire ou agence ?
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-soft">
+            Publiez vos biens et gérez vos messages depuis un seul tableau
+            de bord.
+          </p>
+          <a
+            routerLink="/register"
+            class="mt-5 inline-block rounded-md border border-[color:var(--ink)] px-5 py-2.5 text-sm font-semibold text-[color:var(--ink)]"
+          >
+            Publier une annonce
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 </main>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="bg-ink text-white/60">
+  <div class="mx-auto max-w-6xl px-6 py-12">
+    <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+      <div>
+        <span class="font-display text-lg font-medium text-white">
+          FINDOOR <span class="text-clay">AI</span>
+        </span>
+        <p class="mt-2 max-w-xs text-sm">
+          Recherche et sécurisation de logements, pensée pour le Cameroun.
+        </p>
+      </div>
+
+      <nav class="grid grid-cols-2 gap-x-10 gap-y-2 text-sm sm:flex sm:gap-10">
+        <a href="#apropos" class="hover:text-white">Le projet</a>
+        <a href="#fonctionnalites" class="hover:text-white">Fonctionnalités</a>
+        <a routerLink="/login" class="hover:text-white">Se connecter</a>
+        <a routerLink="/register" class="hover:text-white">Créer un compte</a>
+      </nav>
+    </div>
+
+    <div class="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs sm:flex-row sm:justify-between">
+      <p>© {{ currentYear }} FINDOOR AI — Yaoundé, Cameroun</p>
+      <p>Fait avec Angular, Tailwind CSS et beaucoup de café.</p>
+    </div>
+  </div>
+</footer>
