@@ -1,67 +1,99 @@
-/* -----------------------------------------------------------------------
-   Fonts: Fraunces (serif, display) carries the "trust / warmth"
-   personality; Inter (grotesk, body/UI) stays quiet and legible for
-   everything else. Both are now loaded via <link> tags in index.html
-   (parallel fetch, no @import needed here).
-   ----------------------------------------------------------------------- */
-
-/* -----------------------------------------------------------------------
-   Design tokens
-   Scoped to :host so they never leak into the rest of the app, and so the
-   real logo / brand colors can be swapped later by editing only this block.
-   ----------------------------------------------------------------------- */
+/* =========================================================================
+   PALETTE — recalée sur le logo FINDOOR AI
+   Le fond de TOUTE la page reprend maintenant exactement la couleur de fond
+   du logo (#070B2A), donc le logo ne fera plus jamais "carré" au-dessus.
+   Les accents (boutons, titres importants, score) utilisent un dégradé
+   néon vert → cyan → bleu → violet → rose, repris des couleurs du logo.
+   ========================================================================= */
 :host {
-  --ink: #0f1b2a;          /* primary background, headlines on light */
-  --ink-soft: #17293e;     /* secondary dark surface (cards on dark bg) */
-  --paper: #f7f4ee;        /* base light background */
-  --paper-dim: #efe9dd;    /* subtle section separation on light */
-  --clay: #c9622a;         /* primary accent — warmth, CTA */
-  --clay-dark: #a94f21;    /* hover state for clay */
-  --verified: #2f9e6e;     /* trust-score / "verified" green */
-  --slate: #3d4451;        /* body text on light backgrounds */
-  --slate-soft: #6b7280;   /* secondary text */
-  --line: rgba(15, 27, 42, 0.1);
+  /* --- Fond --- */
+  --bg: #070b2a;            /* fond global, identique au fond du logo */
+  --bg-panel: #10163f;      /* panneaux/cartes légèrement plus clairs que le fond */
+  --bg-panel-2: #161d4d;    /* variante un peu plus claire (hover, contraste) */
+  --line: rgba(255, 255, 255, 0.1); /* bordures discrètes sur fond sombre */
+
+  /* --- Texte --- */
+  --text: rgba(255, 255, 255, 0.92);
+  --text-soft: rgba(255, 255, 255, 0.65);
+  --text-faint: rgba(255, 255, 255, 0.45);
+
+  /* --- Couleurs néon du logo, prises individuellement quand on a besoin
+         d'UNE seule couleur (ex: le vert du score de confiance) --- */
+  --neon-green: #35ffa1;
+  --neon-cyan: #22d3ee;
+  --neon-blue: #4c6fff;
+  --neon-violet: #a855f7;
+  --neon-pink: #ec4899;
+
+  /* --- Le dégradé complet, utilisé sur les boutons principaux et les
+         titres importants, pour rappeler directement le logo --- */
+  --neon-gradient: linear-gradient(
+    90deg,
+    var(--neon-green),
+    var(--neon-cyan),
+    var(--neon-blue),
+    var(--neon-violet),
+    var(--neon-pink)
+  );
 
   --font-display: 'Fraunces', ui-serif, Georgia, serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
   display: block;
   font-family: var(--font-body);
-  color: var(--slate);
-  background: var(--paper);
+  color: var(--text);
+  background: var(--bg);
 }
-
-/* -----------------------------------------------------------------------
-   Utility hooks referenced from the template.
-   Kept to the handful of effects Tailwind's core utilities can't express
-   cleanly: a textured dark surface, the trust-badge glow, the one
-   orchestrated hero entrance, and the chat-mockup caret.
-   ----------------------------------------------------------------------- */
 
 .font-display {
   font-family: var(--font-display);
 }
 
-/* Faint paper grain on the dark hero surface so it reads as a material,
-   not a flat gradient. Pure CSS, no image request. */
-.surface-ink {
-  background-color: var(--ink);
-  background-image:
-    radial-gradient(circle at 15% 20%, rgba(201, 98, 42, 0.16), transparent 45%),
-    radial-gradient(circle at 85% 0%, rgba(47, 158, 110, 0.12), transparent 40%);
+/* =========================================================================
+   TEXTE EN DÉGRADÉ
+   Technique classique : on applique le dégradé comme "background", puis on
+   le découpe à la forme du texte avec background-clip: text, et on rend
+   le texte lui-même transparent pour laisser voir le dégradé en dessous.
+   ========================================================================= */
+.text-neon {
+  background-image: var(--neon-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
-.text-clay { color: var(--clay); }
-.bg-clay { background-color: var(--clay); }
-.bg-clay:hover { background-color: var(--clay-dark); }
-.bg-verified { background-color: var(--verified); }
-.text-verified { color: var(--verified); }
-.bg-ink { background-color: var(--ink); }
-.bg-ink-soft { background-color: var(--ink-soft); }
-.border-line { border-color: var(--line); }
+/* =========================================================================
+   BOUTON PRINCIPAL EN DÉGRADÉ
+   Astuce : on met le dégradé en background du bouton, et une légère
+   "glow" (ombre colorée) au survol pour que ça reste vivant, comme un
+   élément "néon" plutôt qu'un simple aplat de couleur.
+   ========================================================================= */
+.btn-neon {
+  background-image: var(--neon-gradient);
+  color: #070b2a; /* texte foncé : le dégradé est très clair, donc plus lisible que du blanc */
+  font-weight: 600;
+  transition: box-shadow 0.25s ease, transform 0.15s ease;
+}
+.btn-neon:hover {
+  box-shadow: 0 0 24px rgba(76, 111, 255, 0.45), 0 0 24px rgba(236, 72, 153, 0.25);
+  transform: translateY(-1px);
+}
 
-/* Trust-score badge: a small ring + number, the single visual motif that
-   repeats across the page (hero mockup, feature card, AI section). */
+.bg-panel { background-color: var(--bg-panel); }
+.bg-panel-2 { background-color: var(--bg-panel-2); }
+.border-line { border-color: var(--line); }
+.text-soft { color: var(--text-soft); }
+.text-faint { color: var(--text-faint); }
+.text-neon-green { color: var(--neon-green); }
+.text-neon-cyan { color: var(--neon-cyan); }
+
+/* =========================================================================
+   BADGE "SCORE DE CONFIANCE"
+   Un anneau conique (conic-gradient) qui se "remplit" en néon selon le
+   pourcentage --pct. Le centre reste dans la couleur de fond du panneau
+   pour que ça se fonde naturellement, sans carré ni cercle qui détonne.
+   ========================================================================= */
 .score-ring {
   --pct: 92;
   width: 3.25rem;
@@ -70,18 +102,16 @@
   display: grid;
   place-items: center;
   background:
-    radial-gradient(closest-side, var(--ink) 66%, transparent 67% 100%),
-    conic-gradient(var(--verified) calc(var(--pct) * 1%), rgba(255,255,255,0.15) 0);
+    radial-gradient(closest-side, var(--bg-panel) 66%, transparent 67% 100%),
+    conic-gradient(var(--neon-green) calc(var(--pct) * 1%), rgba(255, 255, 255, 0.12) 0);
   font-family: var(--font-display);
   font-weight: 600;
   color: #fff;
   font-size: 0.95rem;
 }
 
-/* Chat-mockup caret for the AI assistant transcript */
-.chat-bubble {
-  position: relative;
-}
+/* Petite "pointe" de bulle de chat (mockup de l'assistant IA) */
+.chat-bubble { position: relative; }
 .chat-bubble.from-user::after {
   content: '';
   position: absolute;
@@ -103,32 +133,28 @@
   clip-path: polygon(100% 0, 0% 100%, 100% 100%);
 }
 
-/* -----------------------------------------------------------------------
-   The one orchestrated motion moment on the page: the hero content settles
-   into place on load. Everything else (hover states) is instant or a
-   short opacity/transform transition — no scroll-triggered reveals on
-   every section, per design guidance.
-   ----------------------------------------------------------------------- */
+/* =========================================================================
+   ANIMATION D'ENTRÉE DU HERO
+   Une seule animation orchestrée au chargement (pas d'effet au scroll sur
+   chaque section, pour rester sobre). On respecte aussi les utilisateurs
+   qui ont désactivé les animations dans leur système (accessibilité).
+   ========================================================================= */
 @keyframes settle-in {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.hero-in {
-  animation: settle-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
+.hero-in { animation: settle-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .hero-in-delay-1 { animation-delay: 0.08s; }
 .hero-in-delay-2 { animation-delay: 0.16s; }
 .hero-in-delay-3 { animation-delay: 0.24s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-in, .hero-in-delay-1, .hero-in-delay-2, .hero-in-delay-3 {
-    animation: none;
-  }
+  .hero-in, .hero-in-delay-1, .hero-in-delay-2, .hero-in-delay-3 { animation: none; }
 }
 
-/* Visible keyboard focus ring, consistent with the clay accent */
+/* Contour visible au clavier (accessibilité), dans une couleur néon */
 a:focus-visible, button:focus-visible {
-  outline: 2px solid var(--clay);
+  outline: 2px solid var(--neon-cyan);
   outline-offset: 2px;
   border-radius: 4px;
 }
