@@ -1,1 +1,245 @@
-<h1>Connexion à FINDOOR AI</h1>
+<!--
+  ============================================================
+  PAGE DE CONNEXION FINDOOR AI
+  ============================================================
+
+  Le conteneur principal prend toute la hauteur de l'écran.
+
+  bg-[#070B2A] :
+  → fond bleu nuit de FINDOOR AI. C'est la couleur de fond
+    du logo lui-même : on l'utilise comme fond de toute
+    la page, pour que le logo se fonde naturellement dedans
+    quand on le pose dessus.
+
+  overflow-hidden :
+  → empêche les éléments décoratifs de dépasser de la page.
+-->
+<div
+  class="relative min-h-screen overflow-hidden bg-[#070B2A] text-white flex flex-col items-center justify-center px-6 py-12"
+>
+
+
+  <!--
+    ============================================================
+    LÉGER EFFET LUMINEUX
+    ============================================================
+
+    Ces deux cercles donnent un peu de profondeur
+    au fond de la page.
+
+    Ils restent très discrets pour ne pas concurrencer
+    le logo ni le formulaire.
+  -->
+
+  <div
+    class="pointer-events-none absolute -left-32 -top-32 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl"
+  ></div>
+
+  <div
+    class="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl"
+  ></div>
+
+
+  <!--
+    ============================================================
+    LOGO — BIEN VISIBLE, EN HAUT DE PAGE, SANS CARRÉ DE FOND
+    ============================================================
+
+    IMPORTANT : ce fichier doit être une version du logo
+    SANS fond (fond transparent), pas la version avec le
+    carré noir/bleu foncé derrière.
+
+    C'est ce carré-là, dans le fichier image lui-même, qui
+    créait la "boîte" visible autour du logo — ce n'est pas
+    un problème de CSS, c'est le fichier logo-findoor-ai.png
+    d'origine qui contient déjà ce fond.
+
+    Avec un fichier à fond transparent (logo-findoor-ai-transparent.png),
+    le logo se fond directement dans le bg-[#070B2A] de la page,
+    et le carré disparaît complètement.
+
+    Fichier placé dans public/ (dossier statique généré par Angular),
+    donc le chemin commence directement par "/" — pas de préfixe
+    "assets/" à ajouter.
+
+    z-10 :
+    → passe devant les cercles lumineux décoratifs.
+  -->
+  <img
+    src="/logo-findoor-ai.png"
+    alt="FINDOOR AI"
+    class="relative z-10 mb-10 h-32 w-32 object-contain"
+  />
+
+
+  <!--
+    ============================================================
+    FORMULAIRE
+    ============================================================
+
+    z-10 :
+    → reste bien au-dessus des cercles lumineux décoratifs.
+
+    max-w-md :
+    → limite la largeur du formulaire.
+  -->
+  <form
+    [formGroup]="loginForm"
+    (ngSubmit)="onSubmit()"
+    class="relative z-10 w-full max-w-md"
+  >
+
+
+    <!--
+      ==========================================================
+      CHAMP EMAIL
+      ==========================================================
+    -->
+
+    <div class="mb-5">
+
+      <!-- Nom du champ -->
+      <label
+        for="email"
+        class="mb-2 block text-sm font-medium text-slate-200"
+      >
+        Email
+      </label>
+
+      <!--
+        Champ email.
+
+        bg-[#0D133D] :
+        → bleu légèrement différent du fond.
+
+        focus:border-cyan-400 :
+        → la bordure devient cyan lorsque
+          l'utilisateur sélectionne le champ.
+      -->
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="exemple@email.com"
+        class="w-full rounded-xl border border-white/10 bg-[#0D133D]/90 px-4 py-3 text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+      />
+
+    </div>
+
+
+    <!--
+      ==========================================================
+      CHAMP MOT DE PASSE
+      ==========================================================
+    -->
+
+    <div class="mb-7">
+
+      <!-- Nom du champ -->
+      <label
+        for="password"
+        class="mb-2 block text-sm font-medium text-slate-200"
+      >
+        Mot de passe
+      </label>
+
+      <!--
+        Conteneur relatif pour pouvoir positionner l'icône œil
+        à l'intérieur du champ, collée à droite.
+      -->
+      <div class="relative">
+
+        <!--
+          [type] : le type change dynamiquement entre "password"
+          et "text" selon showPassword.
+
+          → Il faut ajouter dans ton fichier .ts :
+
+              showPassword = false;
+
+              togglePassword() {
+                this.showPassword = !this.showPassword;
+              }
+
+          pr-12 : laisse la place à droite pour l'icône, pour que
+          le texte tapé ne passe pas sous l'œil.
+        -->
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Votre mot de passe"
+          class="w-full rounded-xl border border-white/10 bg-[#0D133D]/90 px-4 py-3 pr-12 text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+        />
+
+        <!--
+          Bouton œil.
+
+          type="button" : ESSENTIEL — sans ça, ce bouton
+          soumettrait le formulaire au lieu de juste basculer
+          l'affichage du mot de passe.
+
+          absolute + inset-y-0 + right-0 : colle le bouton
+          verticalement centré, à droite du champ.
+        -->
+        <button
+          type="button"
+          (click)="togglePassword()"
+          class="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-cyan-400"
+        >
+
+          <!-- Œil ouvert : affiché quand le mot de passe est visible -->
+          <svg
+            *ngIf="showPassword"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+
+          <!-- Œil barré : affiché quand le mot de passe est masqué -->
+          <svg
+            *ngIf="!showPassword"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M10.584 10.587a2 2 0 002.828 2.83M9.363 5.365A9.466 9.466 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.548 9.548 0 01-4.132 4.964M6.228 6.228A9.52 9.52 0 002.458 12c1.274 4.057 5.065 7 9.542 7a9.46 9.46 0 004.775-1.275" />
+          </svg>
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!--
+      ==========================================================
+      BOUTON
+      ==========================================================
+
+      Le bouton reste "Se connecter".
+
+      On garde ce texte parce qu'il indique clairement
+      l'action que l'utilisateur va effectuer.
+    -->
+    <button
+      type="submit"
+      class="w-full rounded-xl bg-cyan-400 py-3 font-bold text-[#070B2A] transition hover:bg-cyan-300 active:scale-[0.98]"
+    >
+      Se connecter
+    </button>
+
+
+  </form>
+
+</div>

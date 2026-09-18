@@ -1,0 +1,7 @@
+/*
+  Le composant Login occupe toute la hauteur disponible.
+*/
+:host {
+  display: block;
+  min-height: 100vh;
+}
