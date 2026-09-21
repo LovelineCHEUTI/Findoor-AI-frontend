@@ -18,5 +18,11 @@ export const routes: Routes = [
     // "/register" affiche le composant Register
     path: 'register',
     component: Register
-  }
+  },
+  {
+  path: 'locataire/accueil',
+  loadComponent: () =>
+    import('./features/locataire/accueil-recherche/accueil-recherche')
+      .then(m => m.AccueilRechercheComponent)
+}
 ];

@@ -32,30 +32,23 @@ export class Register {
       confirmationMotDePasse: ['', [Validators.required]],
       role: ['', [Validators.required]]
     },
-    // Deuxième paramètre de fb.group() : les options du groupe entier.
-    // "validators" s'applique au FormGroup complet, pas à un seul champ —
-    // c'est exactement ce qu'il nous faut pour comparer deux champs.
     { validators: Register.motsDePasseIdentiques }
   );
 
   /**
-   * Validateur personnalisé : vérifie que motDePasse et
-   * confirmationMotDePasse ont la même valeur.
-   *
-   * Une fonction de validateur Angular reçoit le "control" (ici, le
-   * FormGroup entier) et doit renvoyer :
-   * - null                        → tout va bien, pas d'erreur
-   * - un objet du type { xxx: true } → il y a une erreur nommée "xxx"
-   *
-   * "static" : on n'a pas besoin de "this" à l'intérieur, donc pas besoin
-   * d'une instance de la classe pour l'utiliser.
+   * Raccourci pour accéder aux champs du formulaire depuis le HTML.
+   * Sans ça, on devrait écrire "registerForm.controls['email']" partout
+   * dans le template. Avec "f", on écrit juste "f['email']" — plus court
+   * et plus lisible.
    */
+  get f() {
+    return this.registerForm.controls;
+  }
+
   private static motsDePasseIdentiques(control: AbstractControl): ValidationErrors | null {
     const motDePasse = control.get('motDePasse')?.value;
     const confirmation = control.get('confirmationMotDePasse')?.value;
 
-    // Si l'un des deux champs est encore vide, on ne signale pas
-    // d'erreur ici — Validators.required s'en charge déjà séparément.
     if (!motDePasse || !confirmation) {
       return null;
     }

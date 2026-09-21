@@ -2,15 +2,10 @@
   Page Register (inscription).
   Réutilise le même langage visuel que Welcome/Login : fond #070B2A
   identique au fond du logo, accents en dégradé néon.
-
-  [formGroup]="registerForm" relie CE <form> au FormGroup créé dans
-  register.ts. Sans cette ligne, Angular ne saurait pas que ce HTML
-  correspond à ce formulaire réactif.
 -->
 <main class="grid min-h-screen place-items-center px-6 py-12">
   <div class="bg-panel w-full max-w-md rounded-2xl border border-line p-8 shadow-2xl">
 
-    <!-- Logo centré en haut de la carte -->
     <div class="mb-6 flex justify-center">
       <img src="/logo-findoor-ai.png" alt="FINDOOR AI" class="h-12 w-auto" />
     </div>
@@ -22,11 +17,6 @@
       Locataire ou propriétaire, rejoignez FINDOOR AI.
     </p>
 
-    <!--
-      (ngSubmit) : événement Angular déclenché quand le formulaire est
-      soumis (clic sur le bouton submit, ou touche Entrée). On appellera
-      la méthode onSubmit() du composant — à ajouter dans register.ts.
-    -->
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-5">
 
       <!-- Nom complet -->
@@ -41,6 +31,20 @@
           placeholder="Ex : Loveline Cheuti"
           class="w-full rounded-md border border-line bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-faint focus:border-transparent focus:outline focus:outline-2 focus:outline-[color:var(--neon-cyan)]"
         />
+        <!--
+          Un seul <p> d'erreur par champ, mais avec PLUSIEURS *ngIf en
+          cascade à l'intérieur : on teste d'abord "required" (champ
+          vide), puis "minlength" (rempli mais trop court). Un seul
+          message s'affiche à la fois, celui qui correspond au premier
+          problème trouvé.
+
+          La condition "f['nomComplet'].touched" évite d'afficher une
+          erreur avant même que l'utilisateur ait cliqué dans le champ.
+        -->
+        <p *ngIf="f['nomComplet'].invalid && f['nomComplet'].touched" class="mt-1.5 text-xs text-[color:var(--neon-pink)]">
+          <span *ngIf="f['nomComplet'].errors?.['required']">Le nom complet est obligatoire.</span>
+          <span *ngIf="f['nomComplet'].errors?.['minlength']">Le nom doit contenir au moins 2 caractères.</span>
+        </p>
       </div>
 
       <!-- Email -->
@@ -55,15 +59,13 @@
           placeholder="vous@exemple.com"
           class="w-full rounded-md border border-line bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-faint focus:border-transparent focus:outline focus:outline-2 focus:outline-[color:var(--neon-cyan)]"
         />
+        <p *ngIf="f['email'].invalid && f['email'].touched" class="mt-1.5 text-xs text-[color:var(--neon-pink)]">
+          <span *ngIf="f['email'].errors?.['required']">L'email est obligatoire.</span>
+          <span *ngIf="f['email'].errors?.['email']">Le format de l'email n'est pas valide.</span>
+        </p>
       </div>
 
-      <!--
-        Mot de passe.
-        Le <div class="relative"> sert de repère de positionnement pour le
-        bouton œil : "absolute" à l'intérieur d'un parent "relative" veut
-        dire "positionné par rapport à CE parent", pas par rapport à toute
-        la page.
-      -->
+      <!-- Mot de passe -->
       <div>
         <label for="motDePasse" class="mb-1.5 block text-sm text-soft">
           Mot de passe
@@ -76,23 +78,16 @@
             placeholder="8 caractères minimum"
             class="w-full rounded-md border border-line bg-white/5 px-4 py-2.5 pr-11 text-sm text-white placeholder:text-faint focus:border-transparent focus:outline focus:outline-2 focus:outline-[color:var(--neon-cyan)]"
           />
-          <!--
-            type="button" est important ici : sans lui, un <button> dans un
-            <form> se comporte comme un bouton "submit" par défaut, et
-            cliquer sur l'œil enverrait le formulaire prématurément.
-          -->
           <button
             type="button"
             (click)="basculerMotDePasse()"
             [attr.aria-label]="motDePasseVisible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
             class="text-faint absolute inset-y-0 right-0 flex items-center px-3 hover:text-white"
           >
-            <!-- Icône "œil" (visible) -->
             <svg *ngIf="!motDePasseVisible" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
               <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke-linejoin="round" />
               <circle cx="12" cy="12" r="3" />
             </svg>
-            <!-- Icône "œil barré" (masqué) -->
             <svg *ngIf="motDePasseVisible" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
               <path d="M3 3l18 18" stroke-linecap="round" />
               <path d="M10.6 5.2C11.05 5.07 11.52 5 12 5c6.5 0 10 7 10 7a17.9 17.9 0 01-3.2 4.2M6.5 6.6C3.9 8.3 2 12 2 12s3.5 7 10 7c1.3 0 2.5-.28 3.6-.75" stroke-linecap="round" stroke-linejoin="round" />
@@ -100,9 +95,13 @@
             </svg>
           </button>
         </div>
+        <p *ngIf="f['motDePasse'].invalid && f['motDePasse'].touched" class="mt-1.5 text-xs text-[color:var(--neon-pink)]">
+          <span *ngIf="f['motDePasse'].errors?.['required']">Le mot de passe est obligatoire.</span>
+          <span *ngIf="f['motDePasse'].errors?.['minlength']">8 caractères minimum.</span>
+        </p>
       </div>
 
-      <!-- Confirmation du mot de passe : même principe, bouton séparé -->
+      <!-- Confirmation du mot de passe -->
       <div>
         <label for="confirmationMotDePasse" class="mb-1.5 block text-sm text-soft">
           Confirmer le mot de passe
@@ -132,20 +131,27 @@
             </svg>
           </button>
         </div>
+        <!--
+          Ici, DEUX cas différents peuvent produire une erreur :
+          1. Le champ lui-même est vide (required) → erreur sur le champ.
+          2. Le champ est rempli, mais ne correspond pas à motDePasse →
+             c'est l'erreur "motsDePasseDifferents", posée sur le
+             FormGroup ENTIER (registerForm.errors), pas sur ce champ
+             précis — c'est pour ça qu'on va la chercher sur
+             "registerForm.errors" et pas sur "f['confirmationMotDePasse'].errors".
+        -->
+        <p *ngIf="f['confirmationMotDePasse'].invalid && f['confirmationMotDePasse'].touched" class="mt-1.5 text-xs text-[color:var(--neon-pink)]">
+          <span *ngIf="f['confirmationMotDePasse'].errors?.['required']">Veuillez confirmer le mot de passe.</span>
+        </p>
+        <p
+          *ngIf="registerForm.errors?.['motsDePasseDifferents'] && f['confirmationMotDePasse'].touched && !f['confirmationMotDePasse'].errors?.['required']"
+          class="mt-1.5 text-xs text-[color:var(--neon-pink)]"
+        >
+          Les mots de passe ne correspondent pas.
+        </p>
       </div>
 
-      <!--
-        Rôle : deux "cartes" cliquables plutôt qu'un <select>, pour que
-        le choix locataire/propriétaire soit bien visible (c'est une
-        décision définitive à l'inscription).
-
-        Techniquement, ce sont deux vrais <input type="radio"> reliés au
-        même formControlName="role" — donc un seul peut être sélectionné
-        à la fois, comme pour n'importe quel groupe radio. On les cache
-        visuellement (sr-only) et on stylise le <label> associé à la
-        place, pour garder l'accessibilité d'un vrai input radio tout en
-        ayant un design de carte.
-      -->
+      <!-- Rôle -->
       <div>
         <span class="mb-1.5 block text-sm text-soft">Je suis...</span>
         <div class="grid grid-cols-2 gap-3">
@@ -162,15 +168,11 @@
             Propriétaire
           </label>
         </div>
+        <p *ngIf="f['role'].invalid && f['role'].touched" class="mt-1.5 text-xs text-[color:var(--neon-pink)]">
+          Merci de choisir un rôle.
+        </p>
       </div>
 
-      <!--
-        Bouton d'inscription.
-        [disabled]="registerForm.invalid" : Angular désactive
-        automatiquement le bouton tant que le formulaire n'est pas
-        entièrement valide (tous les Validators respectés, mots de passe
-        identiques). Pas besoin de vérifier ça "à la main".
-      -->
       <button
         type="submit"
         [disabled]="registerForm.invalid"
