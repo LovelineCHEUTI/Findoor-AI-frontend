@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import {
   FormBuilder,
@@ -24,6 +24,10 @@ export class Register {
 
   private fb = new FormBuilder();
 
+  // On injecte Router pour pouvoir naviguer par le code dans onSubmit(),
+  // comme on l'a fait pour la page d'accueil locataire.
+  constructor(private router: Router) {}
+
   registerForm: FormGroup = this.fb.group(
     {
       nomComplet: ['', [Validators.required, Validators.minLength(2)]],
@@ -35,12 +39,6 @@ export class Register {
     { validators: Register.motsDePasseIdentiques }
   );
 
-  /**
-   * Raccourci pour accéder aux champs du formulaire depuis le HTML.
-   * Sans ça, on devrait écrire "registerForm.controls['email']" partout
-   * dans le template. Avec "f", on écrit juste "f['email']" — plus court
-   * et plus lisible.
-   */
   get f() {
     return this.registerForm.controls;
   }
@@ -71,11 +69,23 @@ export class Register {
 
   /**
    * Appelée quand le formulaire est soumis (bouton "Créer mon compte").
-   * Pour l'instant, on se contente d'afficher les valeurs dans la
-   * console : le backend n'a pas encore d'endpoint /auth/register à
-   * appeler, donc on ne peut pas encore envoyer une vraie requête.
+   *
+   * Pour l'instant, le backend n'a pas encore d'endpoint /auth/register
+   * à appeler. On simule donc une inscription réussie en redirigeant
+   * directement selon le rôle choisi — TEMPORAIRE, à remplacer plus
+   * tard par un vrai appel HTTP qui attendra la réponse du serveur
+   * avant de rediriger.
    */
   onSubmit(): void {
     console.log('Formulaire soumis :', this.registerForm.value);
+
+    const role = this.registerForm.value.role;
+
+    if (role === 'locataire') {
+      this.router.navigate(['/locataire/accueil']);
+    } else {
+      // Cette route n'existe pas encore, on la créera à l'étape du module Propriétaire.
+      this.router.navigate(['/proprietaire/dashboard']);
+    }
   }
 }
